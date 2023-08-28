@@ -1,19 +1,29 @@
 parameters: {}
 environment: {}
 packages:
-    - name: sample
+    - name: telnyx
       shared: false
       environment: {}
       parameters: {}
       annotations: {}
       functions:
-        - name: hello
+        - name: send_code
           binary: false
-          main: ""
-          runtime: nodejs:default
+          main: "entry_point"
+          runtime: python:3.11
           web: true
           webSecure: false
-          parameters: {}
+          environment:
+            DEFAULT_VERIFY_PROFILE_ID: "${DEFAULT_VERIFY_PROFILE_ID}"
+            TELNYX_API_KEY: "${TELNYX_API_KEY}"
+          limits:
+            timeout: 8000
+        - name: submit_code
+          binary: false
+          main: "entry_point"
+          runtime: python:3.11
+          web: true
+          webSecure: false
           environment: {}
-          annotations: {}
-          limits: {}
+          limits:
+            timeout: 8000

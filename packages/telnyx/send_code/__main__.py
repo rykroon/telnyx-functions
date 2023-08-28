@@ -1,10 +1,10 @@
 import os
 import requests
-from .utils import Request, process_response, require_post
+from utils import Request, process_response, require_post
 
 
-def entry_point(args):
-    request = Request.from_args(args)
+def entry_point(event):
+    request = Request.from_event(event)
     return process_response(main(request))
 
 
@@ -20,8 +20,8 @@ def main(request):
 
     payload = {"phone_number": phone_number, "verify_profile_id": verify_profile_id}
 
-    API_KEY = os.environ["API_KEY"]
-    headers = {"Authorization": f"Bearer {API_KEY}"}
+    TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
+    headers = {"Authorization": f"Bearer {TELNYX_API_KEY}"}
     resp = requests.post(
         "https://api.telnyx.com/v2/verifications/sms",
         headers=headers,

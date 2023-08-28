@@ -1,29 +1,47 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 
 @dataclass
 class Request:
-    path: str
-    method: str
     headers: dict[str, str]
+    method: str
+    path: str
+    body: str | None
+    is_base64_encoded: bool | None
+    query_string: str | None
     data: dict[str, Any]
-    body: bytes | None
 
     @classmethod
-    def from_args(cls, args):
-        http = args.pop("http")
+    def from_event(cls, event):
+        http = event["http"]
         return cls(
-            path=http["path"],
-            method=http["method"],
             headers=http["headers"],
+            method=http["method"],
+            path=http["path"],
             body=http.get("body"),
-            data={k: v for k, v in args.items() if not k.startswith("__ow")},
+            is_base64_encoded=http.get("isBase64Encoded"),
+            query_string=http.get("queryString"),
+            data={
+                k: v
+                for k, v in event.items()
+                if not k.startswith("__ow") and k != "http"
+            },
         )
 
 
+@dataclass
+class Response:
+    body: Any
+    status_code: int = 200
+    headers: dict[str, str] = field(default_factory=dict)
+
+
 def process_response(resp):
-    if not isinstance(resp, tuple):
+    if isinstance(resp, Response):
+        return {"body": resp.body, "statusCode": resp.status_code, "headers": resp.headers}
+
+    elif not isinstance(resp, tuple):
         return {"body": resp}
 
     match len(resp):
@@ -31,8 +49,8 @@ def process_response(resp):
             return {"body": resp[0]}
         case 2:
             return {"body": resp[0], "statusCode": resp[1]}
-        case _:
-            raise Exception("idk bro.")
+        case 3:
+            return {"body": resp[0], "statusCode": resp[1], "headers": resp[2]}
 
 
 def require_http_methods(method_list, /):

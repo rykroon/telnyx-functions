@@ -1,6 +1,6 @@
 import os
 import requests
-from .utils import Request, process_response, require_post
+from utils import Request, process_response, require_post
 
 
 def entry_point(args):
@@ -28,8 +28,8 @@ def main(request):
         "verify_profile_id": verify_profile_id
     }
 
-    API_KEY = os.environ["API_KEY"]
-    headers = {"Authorization": f"Bearer {API_KEY}"}
+    TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
+    headers = {"Authorization": f"Bearer {TELNYX_API_KEY}"}
     url = f"https://api.telnyx.com/v2/verifications/by_phone_number/{phone_number}/actions/verify"
     resp = requests.post(url, headers=headers, json=payload, timeout=5)
     return resp.json(), resp.status_code
