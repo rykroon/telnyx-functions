@@ -1,15 +1,15 @@
 parameters: {}
 environment: {}
 packages:
-    - name: telnyx
+    - name: verify
       shared: false
       environment: {}
       parameters: {}
       annotations: {}
       functions:
-        - name: send_code
+        - name: request_code
           binary: false
-          main: "entry_point"
+          main: "main"
           runtime: python:3.11
           web: true
           webSecure: false
@@ -17,13 +17,14 @@ packages:
             DEFAULT_VERIFY_PROFILE_ID: "${DEFAULT_VERIFY_PROFILE_ID}"
             TELNYX_API_KEY: "${TELNYX_API_KEY}"
           limits:
-            timeout: 8000
-        - name: submit_code
+            timeout: 10000
+        - name: verify_code
           binary: false
-          main: "entry_point"
+          main: "main"
           runtime: python:3.11
           web: true
           webSecure: false
-          environment: {}
+          environment:
+            TELNYX_API_KEY: "${TELNYX_API_KEY}"
           limits:
-            timeout: 8000
+            timeout: 10000

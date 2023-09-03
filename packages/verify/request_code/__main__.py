@@ -1,20 +1,19 @@
 import os
 import requests
-from utils import Request, process_response, require_post
+from pydoftk import function, Request
 
 
-def entry_point(event):
-    request = Request.from_event(event)
-    return process_response(main(request))
+@function
+def main(request: Request):
+    if request.method != "POST":
+        return "Method not allowed", 405
 
-
-@require_post
-def main(request):
-    if "phone_number" not in request.data:
+    request_json = request.json()
+    if "phone_number" not in request_json:
         return "Missing parameter 'phone_number'.", 422
 
-    phone_number = request.data["phone_number"]
-    verify_profile_id = request.data.get(
+    phone_number = request_json["phone_number"]
+    verify_profile_id = request_json.get(
         "verify_profile_id", os.environ["DEFAULT_VERIFY_PROFILE_ID"]
     )
 
