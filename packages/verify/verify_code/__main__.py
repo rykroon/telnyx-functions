@@ -3,6 +3,10 @@ import requests
 from pydoftk import function, Request
 
 
+TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
+TELNYX_BASE_URL = os.environ["TELNYX_BASE_URL"]
+
+
 @function
 def main(request: Request):
     request_json = request.json()
@@ -28,8 +32,7 @@ def main(request: Request):
         "verify_profile_id": verify_profile_id
     }
 
-    TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
     headers = {"Authorization": f"Bearer {TELNYX_API_KEY}"}
-    url = f"https://api.telnyx.com/v2/verifications/by_phone_number/{phone_number}/actions/verify"
+    url = f"{TELNYX_BASE_URL}/v2/verifications/by_phone_number/{phone_number}/actions/verify"
     resp = requests.post(url, headers=headers, json=payload, timeout=5)
     return resp.json(), resp.status_code

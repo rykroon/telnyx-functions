@@ -1,11 +1,11 @@
 parameters: {}
-environment: {}
+environment:
+  TELNYX_API_KEY: "${TELNYX_API_KEY}"
+  TELNYX_BASE_URL: "${TELNYX_BASE_URL}"
 packages:
     - name: verify
       shared: false
       environment: {}
-      parameters: {}
-      annotations: {}
       functions:
         - name: request_code
           binary: false
@@ -15,7 +15,6 @@ packages:
           webSecure: false
           environment:
             DEFAULT_VERIFY_PROFILE_ID: "${DEFAULT_VERIFY_PROFILE_ID}"
-            TELNYX_API_KEY: "${TELNYX_API_KEY}"
           limits:
             timeout: 10000
         - name: verify_code
@@ -24,7 +23,25 @@ packages:
           runtime: python:3.11
           web: true
           webSecure: false
-          environment:
-            TELNYX_API_KEY: "${TELNYX_API_KEY}"
+          limits:
+            timeout: 10000
+    - name: messages
+      shared: false
+      environment: {}
+      functions:
+        - name: send_message
+          binary: false
+          main: "main"
+          runtime: python:3.11
+          web: true
+          webSecure: false
+          limits:
+            timeout: 10000
+        - name: receive_message
+          binary: false
+          main: "main"
+          runtime: python:3.11
+          web: true
+          webSecure: false
           limits:
             timeout: 10000
