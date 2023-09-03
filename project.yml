@@ -11,7 +11,7 @@ packages:
           binary: false
           main: "main"
           runtime: python:3.11
-          web: true
+          web: raw
           webSecure: false
           environment:
             DEFAULT_VERIFY_PROFILE_ID: "${DEFAULT_VERIFY_PROFILE_ID}"
@@ -21,7 +21,7 @@ packages:
           binary: false
           main: "main"
           runtime: python:3.11
-          web: true
+          web: raw
           webSecure: false
           limits:
             timeout: 10000
@@ -33,7 +33,7 @@ packages:
           binary: false
           main: "main"
           runtime: python:3.11
-          web: true
+          web: raw
           webSecure: false
           limits:
             timeout: 10000
@@ -41,7 +41,7 @@ packages:
           binary: false
           main: "main"
           runtime: python:3.11
-          web: true
+          web: raw
           webSecure: false
           limits:
             timeout: 10000
