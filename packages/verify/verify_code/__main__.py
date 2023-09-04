@@ -13,26 +13,25 @@ def main(request: Request):
 
     if request.method != "POST":
         return "Method not allowed.", 405
+    
+    try:
+        code = request_json["code"]
+        verification_id = request_json["verification_id"]
 
-    if "phone_number" not in request_json:
-        return "Missing parameter 'phone_number'.", 422
+    except KeyError as e:
+        return f"Missing parameter {e}.", 422
 
-    if "code" not in request_json:
-        return "Missing parameter 'code'.", 422
-
-    if "verify_profile_id" not in request_json:
-        return "Missing parameter 'verify_profile_id'.", 422
-
-    phone_number = request_json["phone_number"]
-    code = request_json["code"]
-    verify_profile_id = request_json["verify_profile_id"]
-
-    payload = {
-        "code": code,
-        "verify_profile_id": verify_profile_id
-    }
-
+    # get verification information.
     headers = {"Authorization": f"Bearer {TELNYX_API_KEY}"}
+    url = f"{TELNYX_BASE_URL}/verifications/{verification_id}"
+    resp = requests.get(url, headers=headers, timeout=5)
+    resp.raise_for_status()
+    result = resp.json()
+
+    phone_number = result["data"]["phone_number"]
+    verify_profile_id = result["data"]["verify_profile_id"]
+    payload = {"code": code, "verify_profile_id": verify_profile_id}
+
     url = f"{TELNYX_BASE_URL}/v2/verifications/by_phone_number/{phone_number}/actions/verify"
     resp = requests.post(url, headers=headers, json=payload, timeout=5)
     return resp.json(), resp.status_code
