@@ -1,1 +1,1 @@
-pydoftk==0.1.0
+pydoftk==0.2.*
