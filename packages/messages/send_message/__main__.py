@@ -1,5 +1,7 @@
 import os
-from pydoftk import function, Request
+from seastar.application import seastar
+from seastar.requests import Request
+from seastar.responses import JsonResponse
 import requests
 
 
@@ -7,14 +9,10 @@ TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
 TELNYX_BASE_URL = os.environ["TELNYX_BASE_URL"]
 
 
-@function
+@seastar(methods=["POST"])
 def main(request: Request):
-    if request.method != "POST":
-        return "Method not allowed.", 405
-
     # parameters
     # - from, to, text, media_urls.
-
     headers = {"Authorization": f"Bearer {TELNYX_API_KEY}"}
     resp = requests.post(
         url=f"{TELNYX_BASE_URL}/v2/messages",
@@ -23,4 +21,4 @@ def main(request: Request):
         timeout=5
     )
 
-    return resp.json(), resp.status_code
+    return JsonResponse(resp.json(), resp.status_code)

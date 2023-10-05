@@ -1,7 +1,9 @@
-from pydoftk import function, Request
+from seastar.application import seastar
+from seastar.requests import Request
+from seastar.responses import PlainTextResponse
 
 
 
-@function
+@seastar
 def main(request: Request):
-    return ""
+    return PlainTextResponse("Hello World")

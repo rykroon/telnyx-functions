@@ -1,20 +1,20 @@
 import os
 import requests
-from pydoftk import function, Request
+from seastar.application import seastar
+from seastar.exceptions import HttpException
+from seastar.requests import Request
+from seastar.responses import JsonResponse
 
 
 TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
 TELNYX_BASE_URL = os.environ["TELNYX_BASE_URL"]
 
 
-@function
+@seastar(methods=["POST"], debug=True)
 def main(request: Request):
-    if request.method != "POST":
-        return "Method not allowed", 405
-
     request_json = request.json()
     if "phone_number" not in request_json:
-        return "Missing parameter 'phone_number'.", 422
+        raise HttpException(422, "Missing parameter 'phone_number'.")
 
     phone_number = request_json["phone_number"]
     verify_profile_id = request_json.get(
@@ -29,4 +29,4 @@ def main(request: Request):
         json=payload,
         timeout=5,
     )
-    return resp.json(), resp.status_code
+    return JsonResponse(resp.json(), resp.status_code)

@@ -1,1 +1,1 @@
-pydoftk==0.2.*
+seastar==0.2.2
