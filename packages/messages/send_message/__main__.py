@@ -1,5 +1,5 @@
 import os
-from seastar.application import seastar
+from seastar.applications import seastar
 from seastar.requests import Request
 from seastar.responses import JsonResponse
 import requests
@@ -9,7 +9,7 @@ TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
 TELNYX_BASE_URL = os.environ["TELNYX_BASE_URL"]
 
 
-@seastar(methods=["POST"])
+@seastar(methods=["POST"], debug=True)
 def main(request: Request):
     # parameters
     # - from, to, text, media_urls.

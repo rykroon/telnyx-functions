@@ -1,6 +1,6 @@
 import os
 import requests
-from seastar.application import seastar
+from seastar.applications import seastar
 from seastar.exceptions import HttpException
 from seastar.requests import Request
 from seastar.responses import JsonResponse
