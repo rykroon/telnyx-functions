@@ -1,16 +1,17 @@
 import os
 import requests
-from seastar.applications import seastar
-from seastar.exceptions import HttpException
+from seastar import web_function
 from seastar.requests import Request
 from seastar.responses import Response
+
+from starlette.exceptions import HTTPException
 
 
 TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
 TELNYX_BASE_URL = os.environ["TELNYX_BASE_URL"]
 
 
-@seastar(methods=["POST"], debug=True)
+@web_function(methods=["POST"])
 def main(request: Request):
     request_json = request.json()
 
@@ -19,7 +20,7 @@ def main(request: Request):
         verification_id = request_json["verification_id"]
 
     except KeyError as e:
-        raise HttpException(422, f"Missing parameter {e}.")
+        raise HTTPException(422, f"Missing parameter {e}.")
 
     # get verification information.
     headers = {"Authorization": f"Bearer {TELNYX_API_KEY}"}

@@ -1,20 +1,22 @@
 import os
 import requests
-from seastar.applications import seastar
-from seastar.exceptions import HttpException
+
+from starlette.exceptions import HTTPException
+
+from seastar import web_function
 from seastar.requests import Request
-from seastar.responses import JsonResponse
+from seastar.responses import JSONResponse
 
 
 TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
 TELNYX_BASE_URL = os.environ["TELNYX_BASE_URL"]
 
 
-@seastar(methods=["POST"], debug=True)
+@web_function(methods=["POST"])
 def main(request: Request):
     request_json = request.json()
     if "phone_number" not in request_json:
-        raise HttpException(422, "Missing parameter 'phone_number'.")
+        raise HTTPException(422, "Missing parameter 'phone_number'.")
 
     phone_number = request_json["phone_number"]
     verify_profile_id = request_json.get(
@@ -29,4 +31,4 @@ def main(request: Request):
         json=payload,
         timeout=5,
     )
-    return JsonResponse(resp.json(), resp.status_code)
+    return JSONResponse(resp.json(), resp.status_code)

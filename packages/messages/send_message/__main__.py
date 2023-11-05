@@ -1,7 +1,7 @@
 import os
-from seastar.applications import seastar
+from seastar import web_function
 from seastar.requests import Request
-from seastar.responses import JsonResponse
+from seastar.responses import JSONResponse
 import requests
 
 
@@ -9,7 +9,7 @@ TELNYX_API_KEY = os.environ["TELNYX_API_KEY"]
 TELNYX_BASE_URL = os.environ["TELNYX_BASE_URL"]
 
 
-@seastar(methods=["POST"], debug=True)
+@web_function(methods=["POST"])
 def main(request: Request):
     # parameters
     # - from, to, text, media_urls.
@@ -21,4 +21,4 @@ def main(request: Request):
         timeout=5
     )
 
-    return JsonResponse(resp.json(), resp.status_code)
+    return JSONResponse(resp.json(), resp.status_code)
